@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.quickcart.utils.ProductUtil.getMockProduct;
 import static com.example.quickcart.utils.ProductUtil.getMockProductWithId;
@@ -47,6 +48,19 @@ class ProductServiceTest {
         Assertions.assertThat(productPage.getContent().get(0).getId()).contains("001");
         Assertions.assertThat(productPage.getContent().get(1).getId()).contains("002");
         Assertions.assertThat(productPage.getContent().get(2).getId()).contains("003");
+    }
+
+    @Test
+    void testGetProductById() {
+        String productId = "0000000000111";
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(getMockProductWithId(Long.parseLong(productId))));
+
+        Product product = productService.getProductById(productId);
+
+        Assertions.assertThat(product).isNotNull();
+        Assertions.assertThat(product.getId()).isEqualTo(productId);
+        Assertions.assertThat(product.getName()).contains("Mock Product");
     }
 
     @Test
