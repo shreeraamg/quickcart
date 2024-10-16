@@ -1,5 +1,6 @@
 package com.example.quickcart.service;
 
+import com.example.quickcart.exception.InvalidIdException;
 import com.example.quickcart.exception.ProductNotFoundException;
 import com.example.quickcart.model.Product;
 import com.example.quickcart.repository.ProductRepository;
@@ -64,6 +65,7 @@ class ProductServiceTest {
         Assertions.assertThat(product.getName()).contains("Mock Product");
     }
 
+    @Test
     void testGetProductById_NotFound() {
         String productId = "0000000000111";
 
@@ -72,6 +74,15 @@ class ProductServiceTest {
         Assertions.assertThatThrownBy(() -> productService.getProductById(productId))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessageContaining("No Product found with given ID: " + productId);
+    }
+
+    @Test
+    void testGetProductById_InvalidId() {
+        String productId = "INVALID";
+
+        Assertions.assertThatThrownBy(() -> productService.getProductById(productId))
+                .isInstanceOf(InvalidIdException.class)
+                .hasMessageContaining("Invalid Product Id Provided.");
     }
 
     @Test
