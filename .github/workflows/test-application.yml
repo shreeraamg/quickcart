@@ -1,0 +1,41 @@
+name: Test Application
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: graalvm
+          java-version: 17
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4.1.1
+        with:
+          path: |
+            ~./gradle/caches
+            ~./gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Run Unit Tests
+        run: ./gradlew test
+        continue-on-error: true
+
+      - name: Upload Test Results on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-${{ github.sha }}
+          path: build/reports/tests/test
