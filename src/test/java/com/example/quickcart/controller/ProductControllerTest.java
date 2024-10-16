@@ -125,7 +125,7 @@ class ProductControllerTest {
         ResultActions response = mvc.perform(MockMvcRequestBuilders.get("/api/products/" + productId));
 
         response
-                .andExpect(MockMvcResultMatchers.status().is(404))
+                .andExpect(MockMvcResultMatchers.status().is(400))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value(errorMessage))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timeStamp").exists());
     }
