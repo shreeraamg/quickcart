@@ -19,6 +19,9 @@ jobs:
           distribution: oracle
           java-version: 17
 
+      - name: Grant Execute Permission for gradlew
+        run: chmod +x ./gradlew
+
       - name: Cache Dependencies
         uses: actions/cache@v4.1.1
         with:
