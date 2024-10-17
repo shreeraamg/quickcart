@@ -84,11 +84,10 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install -g newman
-          npm install -g newman-reporter-html
+          npm install -g newman newman-reporter-html
 
       - name: Run API Tests
-        run: newman run ./docs/postman/quickcart-api-test-collection.json -r html --reporter-html-export ./postman/report.html
+        run: newman run docs/postman/quickcart-api-test-collection.json --global-var "URL=http://localhost:8080" -r html --reporter-html-export ./postman/report.html
 
       - name: Upload Test Results on Failure
         if: failure()
