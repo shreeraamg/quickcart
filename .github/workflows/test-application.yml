@@ -73,7 +73,7 @@ jobs:
       - name: Build & Run Application
         run: |
           ./gradlew build
-          java -jar .\build\libs\quickcart-1.0.0.jar &
+          java -jar build/libs/quickcart-1.0.0.jar &
 
       - name: Setup NodeJS
         uses: actions/setup-node@v4
