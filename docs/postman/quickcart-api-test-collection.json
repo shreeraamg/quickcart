@@ -1,0 +1,354 @@
+{
+  "info": {
+    "_postman_id": "ba18309a-4685-4960-94c5-d7f78eaab131",
+    "name": "QuickCart",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "28836731"
+  },
+  "item": [
+    {
+      "name": "Get All Products - Successful",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status Code is 200\", () => {\r",
+              "  pm.response.status;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", () => {\r",
+              "  pm.response.to.have.header(\"Content-Type\");\r",
+              "  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\r",
+              "    \"application/json\"\r",
+              "  );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response has Expected Schame\", () => {\r",
+              "  const productSchema = {\r",
+              "    type: \"object\",\r",
+              "    properties: {\r",
+              "      id: { type: \"string\" },\r",
+              "      name: { type: \"string\" },\r",
+              "      description: { type: \"string\" },\r",
+              "      price: { type: \"number\" },\r",
+              "      category: { type: \"string\" },\r",
+              "      brand: { type: \"string\" },\r",
+              "      tags: {\r",
+              "        type: \"array\",\r",
+              "        items: { type: \"string\" },\r",
+              "      },\r",
+              "      thumbnail: { type: \"string\" },\r",
+              "      images: {\r",
+              "        type: \"array\",\r",
+              "        items: { type: \"string\" },\r",
+              "      },\r",
+              "      rating: { type: \"number\" },\r",
+              "      isFeatured: { type: \"boolean\" },\r",
+              "    },\r",
+              "    required: [\"id\", \"name\", \"price\", \"thumbnail\", \"category\", \"brand\"],\r",
+              "  };\r",
+              "\r",
+              "  const content = pm.response.json().content;\r",
+              "  pm.expect(content).to.be.an(\"array\").that.is.not.empty;\r",
+              "  pm.expect(content[0]).to.have.jsonSchema(productSchema);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response body is Not Empty\", () => {\r",
+              "  pm.expect(pm.response.json()).to.not.be.empty;\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}/api/products",
+          "host": ["{{URL}}"],
+          "path": ["api", "products"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search Products - Successful",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status Code is 200\", () => {\r",
+              "  pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", () => {\r",
+              "  pm.response.to.have.header(\"Content-Type\");\r",
+              "  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\r",
+              "    \"application/json\"\r",
+              "  );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response has Expected Schema\", () => {\r",
+              "  const productSchema = {\r",
+              "    type: \"object\",\r",
+              "    properties: {\r",
+              "      id: { type: \"string\" },\r",
+              "      name: { type: \"string\" },\r",
+              "      description: { type: \"string\" },\r",
+              "      price: { type: \"number\" },\r",
+              "      category: { type: \"string\" },\r",
+              "      brand: { type: \"string\" },\r",
+              "      tags: {\r",
+              "        type: \"array\",\r",
+              "        items: { type: \"string\" },\r",
+              "      },\r",
+              "      thumbnail: { type: \"string\" },\r",
+              "      images: {\r",
+              "        type: \"array\",\r",
+              "        items: { type: \"string\" },\r",
+              "      },\r",
+              "      rating: { type: [\"number\", \"null\"] },\r",
+              "      isFeatured: { type: \"boolean\" },\r",
+              "    },\r",
+              "    required: [\"id\", \"name\", \"price\", \"thumbnail\", \"category\", \"brand\"],\r",
+              "  };\r",
+              "\r",
+              "  const content = pm.response.json().content;\r",
+              "  pm.expect(content).to.be.an(\"array\").that.is.not.empty;\r",
+              "  pm.expect(content[0]).to.have.jsonSchema(productSchema);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Search Query in Response\", () => {\r",
+              "  const content = pm.response.json().content;\r",
+              "  pm.expect(content[0].name).to.include(\"Oil\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response body is Not Empty\", () => {\r",
+              "  pm.expect(pm.response.json()).to.not.be.empty;\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}/api/products/search?query=oil",
+          "host": ["{{URL}}"],
+          "path": ["api", "products", "search"],
+          "query": [
+            {
+              "key": "query",
+              "value": "oil"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product By Id - Successful",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status Code is 200\", () => {\r",
+              "  pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", () => {\r",
+              "  pm.response.to.have.header(\"Content-Type\");\r",
+              "  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\r",
+              "    \"application/json\"\r",
+              "  );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response has Expected Schema\", () => {\r",
+              "  const productSchema = {\r",
+              "    type: \"object\",\r",
+              "    properties: {\r",
+              "      id: { type: \"string\" },\r",
+              "      name: { type: \"string\" },\r",
+              "      description: { type: \"string\" },\r",
+              "      price: { type: \"number\" },\r",
+              "      category: { type: \"string\" },\r",
+              "      brand: { type: \"string\" },\r",
+              "      tags: {\r",
+              "        type: \"array\",\r",
+              "        items: { type: \"string\" },\r",
+              "      },\r",
+              "      thumbnail: { type: \"string\" },\r",
+              "      images: {\r",
+              "        type: \"array\",\r",
+              "        items: { type: \"string\" },\r",
+              "      },\r",
+              "      rating: { type: [\"number\", \"null\"] },\r",
+              "      isFeatured: { type: \"boolean\" },\r",
+              "    },\r",
+              "    required: [\"id\", \"name\", \"price\", \"thumbnail\", \"category\", \"brand\"],\r",
+              "  };\r",
+              "\r",
+              "  const product = pm.response.json();\r",
+              "  pm.expect(product).to.have.jsonSchema(productSchema);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response has Expected Data\", () => {\r",
+              "  const product = pm.response.json();\r",
+              "  pm.expect(product.id).to.include(\"1729053686470\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response body is Not Empty\", () => {\r",
+              "  pm.expect(pm.response.json()).to.not.be.empty;\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}/api/products/1729053686470",
+          "host": ["{{URL}}"],
+          "path": ["api", "products", "1729053686470"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product By Id - Not Found",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status Code is 404\", () => {\r",
+              "  pm.response.to.have.status(404);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", () => {\r",
+              "  pm.response.to.have.header(\"Content-Type\");\r",
+              "  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\r",
+              "    \"application/json\"\r",
+              "  );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response has Expected Schema\", () => {\r",
+              "  const errorSchema = {\r",
+              "    type: \"object\",\r",
+              "    properties: {\r",
+              "      timeStamp: { type: \"string\" },\r",
+              "      error: { type: \"string\" },\r",
+              "    },\r",
+              "    required: [\"timeStamp\", \"error\"],\r",
+              "  };\r",
+              "\r",
+              "  pm.expect(pm.response.json()).to.have.jsonSchema(errorSchema);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response body is Not Empty\", () => {\r",
+              "  pm.expect(pm.response.json()).to.not.be.empty;\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}/api/products/0000000000111",
+          "host": ["{{URL}}"],
+          "path": ["api", "products", "0000000000111"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product By Id - Invalid",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status Code is 400\", () => {\r",
+              "  pm.response.to.have.status(400);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", () => {\r",
+              "  pm.response.to.have.header(\"Content-Type\");\r",
+              "  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\r",
+              "    \"application/json\"\r",
+              "  );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response has Expected Schema\", () => {\r",
+              "  const errorSchema = {\r",
+              "    type: \"object\",\r",
+              "    properties: {\r",
+              "      timeStamp: { type: \"string\" },\r",
+              "      error: { type: \"string\" },\r",
+              "    },\r",
+              "    required: [\"timeStamp\", \"error\"],\r",
+              "  };\r",
+              "\r",
+              "  pm.expect(pm.response.json()).to.have.jsonSchema(errorSchema);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response body is Not Empty\", () => {\r",
+              "  pm.expect(pm.response.json()).to.not.be.empty;\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}/api/products/INVALID",
+          "host": ["{{URL}}"],
+          "path": ["api", "products", "INVALID"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    }
+  ]
+}
