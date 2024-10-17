@@ -47,6 +47,8 @@ jobs:
     needs:
       - unit-test
     environment: non-prod
+    env:
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
