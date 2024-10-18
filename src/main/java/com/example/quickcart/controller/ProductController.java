@@ -2,12 +2,18 @@ package com.example.quickcart.controller;
 
 import com.example.quickcart.model.Product;
 import com.example.quickcart.service.ProductService;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -88,6 +94,12 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable String id) {
         String result = productService.deleteProductById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/upload-csv")
+    public ResponseEntity<String> uploadCsv(@RequestParam MultipartFile file) throws IOException, CsvException {
+        String result = productService.uploadCsv(file);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

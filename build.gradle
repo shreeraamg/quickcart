@@ -18,10 +18,22 @@ java {
 	}
 }
 
+sourceSets {
+	integrationTest {
+		compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+		runtimeClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+		java.srcDir file('src/integration/java')
+		resources.srcDir file('src/integration/resources')
+	}
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+
+	integrationTestImplementation.extendsFrom testImplementation
+	integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 repositories {
@@ -29,14 +41,32 @@ repositories {
 }
 
 dependencies {
+	implementation 'com.opencsv:opencsv:5.9'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	compileOnly 'org.projectlombok:lombok'
+
 	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'com.github.java-json-tools:json-schema-validator:2.2.14'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register('integrationTest', Test) {
+	description = 'Runs the integration tests.'
+	group = 'verification'
+
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+
+	shouldRunAfter test
+}
+
+check.dependsOn integrationTest

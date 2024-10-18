@@ -2,17 +2,24 @@ package com.example.quickcart.service.impl;
 
 import com.example.quickcart.exception.InvalidIdException;
 import com.example.quickcart.exception.ProductNotFoundException;
+import com.example.quickcart.mapper.ProductMapper;
 import com.example.quickcart.model.Category;
 import com.example.quickcart.model.Product;
 import com.example.quickcart.repository.ProductRepository;
 import com.example.quickcart.service.ProductService;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,10 +27,16 @@ import java.util.regex.Pattern;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private final ProductMapper productMapper;
+
     private final ProductRepository productRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(
+            ProductMapper productMapper,
+            ProductRepository productRepository
+    ) {
+        this.productMapper = productMapper;
         this.productRepository = productRepository;
     }
 
@@ -96,5 +109,18 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception ex) {
             return String.format("Failed to delete product with Id: %s. Please try again", id);
         }
+    }
+
+    @Override
+    public String uploadCsv(MultipartFile file) throws IOException, CsvException {
+        CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputStream()));
+        List<String[]> rows = csvReader.readAll();
+        rows.remove(0);
+        for (String[] row : rows) {
+            Product product = productMapper.mapToProduct(row);
+//            System.out.println(product);
+            System.out.println(product.getId() == null);
+        }
+        return "Uploading CSV";
     }
 }
